@@ -1,0 +1,26 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: prontuario-medico
+      POSTGRES_USER: fiap
+      POSTGRES_PASSWORD: prontuario
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api:
+    image: postgrest/postgrest:latest
+    restart: always
+    environment:
+      PGRST_DB_URI: postgres://fiap:prontuario@db:5432/prontuario-medico
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
