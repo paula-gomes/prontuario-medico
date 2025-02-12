@@ -41,5 +41,8 @@ public class Consulta {
     private List<Prescricao> prescricoes;
 
     private List<Exame> exames;
+
+    private String imageUrl;
+
     // Getters and Setters
 }

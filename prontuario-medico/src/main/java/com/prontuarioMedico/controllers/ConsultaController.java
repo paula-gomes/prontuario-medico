@@ -1,6 +1,7 @@
 package com.prontuarioMedico.controllers;
 
 import com.prontuarioMedico.entities.Consulta;
+import com.prontuarioMedico.service.ArmazenamentoService;
 import com.prontuarioMedico.services.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ public class ConsultaController {
     @Autowired
     private ConsultaService consultaService;
 
+    @Autowired
+    private ArmazenamentoService armazenamentoService;
     @GetMapping
     public List<Consulta> getAllConsultas() {
         return consultaService.findAll();
@@ -29,6 +32,10 @@ public class ConsultaController {
 
     @PostMapping
     public Consulta createConsulta(@RequestBody Consulta consulta) {
+        // Faz o upload da imagem e obtém a URL
+        //        String imagemUrl = armazenamentoService.uploadFile(imagem);
+        //        consulta.setImageUrl(imagemUrl);
+        //  Criar resto do objeto
         return consultaService.save(consulta);
     }
 
