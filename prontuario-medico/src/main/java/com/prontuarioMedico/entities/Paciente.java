@@ -1,12 +1,15 @@
 package com.prontuarioMedico.entities;
 
-import javax.persistence.*;
-
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "pacientes")
+@Getter
+@Setter
 public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +29,5 @@ public class Paciente {
     @JoinColumn(name = "prontuario_id", referencedColumnName = "id")
     private Prontuario prontuario;
 
-
+    // Getters and Setters
 }

@@ -1,10 +1,17 @@
 package com.prontuarioMedico.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Data
+@Getter
+@Setter
 @Table(name = "consultas")
 public class Consulta {
     @Id
@@ -17,11 +24,22 @@ public class Consulta {
     @Column(nullable = false)
     private LocalDateTime dataConsulta;
 
-    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "consulta_diagnostico",
+            joinColumns = @JoinColumn(name = "consulta_id"),
+            inverseJoinColumns = @JoinColumn(name = "diagnostico_id")
+    )
     private List<Diagnostico> diagnosticos;
 
-    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "consulta_prescricao",
+            joinColumns = @JoinColumn(name = "consulta_id"),
+            inverseJoinColumns = @JoinColumn(name = "prescricao_id")
+    )
     private List<Prescricao> prescricoes;
 
+    private List<Exame> exames;
     // Getters and Setters
 }

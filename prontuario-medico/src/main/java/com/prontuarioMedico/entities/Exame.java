@@ -1,10 +1,15 @@
 package com.prontuarioMedico.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "exames")
+@Getter
+@Setter
 public class Exame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
