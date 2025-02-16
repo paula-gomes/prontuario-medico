@@ -32,19 +32,21 @@ public class ProntuarioController {
         return prontuarioService.save(prontuario);
     }
 
-    @PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     public ResponseEntity<Prontuario> updateProntuario(@PathVariable Long id, @RequestBody Prontuario prontuarioDetails) {
-        Optional<Prontuario> prontuario = prontuarioService.findById(id);
-        if (prontuario.isPresent()) {
-            Prontuario updatedProntuario = prontuario.get();
-            updatedProntuario.setPaciente(prontuarioDetails.getPaciente());
-            updatedProntuario.setDataCriacao(prontuarioDetails.getDataCriacao());
-            updatedProntuario.setConsultas(prontuarioDetails.getConsultas());
-            return ResponseEntity.ok(prontuarioService.save(updatedProntuario));
+        Optional<Prontuario> prontuarioOpt = prontuarioService.findById(id);
+        if (prontuarioOpt.isPresent()) {
+            Prontuario prontuario = prontuarioOpt.get();
+            ProntuarioAccess access = new ProntuarioAccess(prontuario);
+            ProntuarioAccess details = new ProntuarioAccess(prontuarioDetails);
+            access.setPaciente(details.getPaciente());
+            access.setDataCriacao(details.getDataCriacao());
+            access.setConsultas(details.getConsultas());
+            return ResponseEntity.ok(prontuarioService.save(prontuario));
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProntuario(@PathVariable Long id) {

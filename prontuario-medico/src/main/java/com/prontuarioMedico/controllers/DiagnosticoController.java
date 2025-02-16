@@ -1,5 +1,6 @@
 package com.prontuarioMedico.controllers;
 
+import com.prontuarioMedico.access.DiagnosticoAccess;
 import com.prontuarioMedico.entities.Diagnostico;
 
 import com.prontuarioMedico.service.DiagnosticoService;
@@ -35,12 +36,16 @@ public class DiagnosticoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Diagnostico> updateDiagnostico(@PathVariable Long id, @RequestBody Diagnostico diagnosticoDetails) {
-        Optional<Diagnostico> diagnostico = diagnosticoService.findById(id);
-        if (diagnostico.isPresent()) {
-            Diagnostico updatedDiagnostico = diagnostico.get();
-            updatedDiagnostico.setConsulta(diagnosticoDetails.getConsulta());
-            updatedDiagnostico.setDescricao(diagnosticoDetails.getDescricao());
-            return ResponseEntity.ok(diagnosticoService.save(updatedDiagnostico));
+        Optional<Diagnostico> diagnosticoOpt = diagnosticoService.findById(id);
+        if (diagnosticoOpt.isPresent()) {
+            Diagnostico diagnostico = diagnosticoOpt.get();
+            DiagnosticoAccess access = new DiagnosticoAccess(diagnostico);
+            DiagnosticoAccess details = new DiagnosticoAccess(diagnosticoDetails);
+
+            access.setConsulta(details.getConsulta());
+            access.setDescricao(details.getDescricao());
+
+            return ResponseEntity.ok(diagnosticoService.save(diagnostico));
         } else {
             return ResponseEntity.notFound().build();
         }

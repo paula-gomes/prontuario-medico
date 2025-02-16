@@ -1,5 +1,6 @@
 package com.prontuarioMedico.controllers;
 
+import com.prontuarioMedico.access.ExameAccess;
 import com.prontuarioMedico.entities.Exame;
 import com.prontuarioMedico.services.ExameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,17 @@ public class ExameController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Exame> updateExame(@PathVariable Long id, @RequestBody Exame exameDetails) {
-        Optional<Exame> exame = exameService.findById(id);
-        if (exame.isPresent()) {
-            Exame updatedExame = exame.get();
-            updatedExame.setConsulta(exameDetails.getConsulta());
-            updatedExame.setTipo(exameDetails.getTipo());
-            updatedExame.setDataExame(exameDetails.getDataExame());
-            return ResponseEntity.ok(exameService.save(updatedExame));
+        Optional<Exame> exameOpt = exameService.findById(id);
+        if (exameOpt.isPresent()) {
+            Exame exame = exameOpt.get();
+            ExameAccess access = new ExameAccess(exame);
+            ExameAccess details = new ExameAccess(exameDetails);
+
+            access.setConsulta(details.getConsulta());
+            access.setTipo(details.getTipo());
+            access.setDataExame(details.getDataExame());
+
+            return ResponseEntity.ok(exameService.save(exame));
         } else {
             return ResponseEntity.notFound().build();
         }

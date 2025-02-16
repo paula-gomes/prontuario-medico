@@ -1,5 +1,6 @@
 package com.prontuarioMedico.controllers;
 
+import com.prontuarioMedico.access.ConsultaAccess;
 import com.prontuarioMedico.entities.Consulta;
 import com.prontuarioMedico.service.ArmazenamentoService;
 import com.prontuarioMedico.services.ConsultaService;
@@ -41,20 +42,23 @@ public class ConsultaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Consulta> updateConsulta(@PathVariable Long id, @RequestBody Consulta consultaDetails) {
-        Optional<Consulta> consulta = consultaService.findById(id);
-        if (consulta.isPresent()) {
-            Consulta updatedConsulta = consulta.get();
-            updatedConsulta.setPaciente(consultaDetails.getPaciente());
-            updatedConsulta.setDataConsulta(consultaDetails.getDataConsulta());
-            updatedConsulta.setDiagnosticos(consultaDetails.getDiagnosticos());
-            updatedConsulta.setExames(consultaDetails.getExames());
-            updatedConsulta.setPrescricoes(consultaDetails.getPrescricoes());
-            return ResponseEntity.ok(consultaService.save(updatedConsulta));
+        Optional<Consulta> consultaOpt = consultaService.findById(id);
+        if (consultaOpt.isPresent()) {
+            Consulta consulta = consultaOpt.get();
+            ConsultaAccess access = new ConsultaAccess(consulta);
+            ConsultaAccess details = new ConsultaAccess(consultaDetails);
+
+            access.setPaciente(details.getPaciente());
+            access.setDataConsulta(details.getDataConsulta());
+            access.setDiagnosticos(details.getDiagnosticos());
+            access.setExames(details.getExames());
+            access.setPrescricoes(details.getPrescricoes());
+
+            return ResponseEntity.ok(consultaService.save(consulta));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteConsulta(@PathVariable Long id) {
         if (consultaService.findById(id).isPresent()) {

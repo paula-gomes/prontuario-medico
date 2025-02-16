@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prescricoes")
-@Getter
-@Setter
 public class Prescricao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +15,13 @@ public class Prescricao {
 
     @ManyToOne
     @JoinColumn(name = "consulta_id", nullable = false)
-    private Consulta consulta;
+    public Consulta consulta;
 
     @Column(nullable = false)
-    private String medicamento;
+    public String medicamento;
 
-    private String dosagem;
-    private LocalDateTime dataPrescricao = LocalDateTime.now();
+    public String dosagem;
+    public LocalDateTime dataPrescricao = LocalDateTime.now();
 
     // Getters and Setters
 }

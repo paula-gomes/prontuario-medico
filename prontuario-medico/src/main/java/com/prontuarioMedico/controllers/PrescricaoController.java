@@ -1,5 +1,6 @@
 package com.prontuarioMedico.controllers;
 
+import com.prontuarioMedico.access.PrescricaoAccess;
 import com.prontuarioMedico.entities.Prescricao;
 import com.prontuarioMedico.services.PrescricaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +35,23 @@ public class PrescricaoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Prescricao> updatePrescricao(@PathVariable Long id, @RequestBody Prescricao prescricaoDetails) {
-        Optional<Prescricao> prescricao = prescricaoService.findById(id);
-        if (prescricao.isPresent()) {
-            Prescricao updatedPrescricao = prescricao.get();
-            updatedPrescricao.setConsulta(prescricaoDetails.getConsulta());
-            updatedPrescricao.setMedicamento(prescricaoDetails.getMedicamento());
-            updatedPrescricao.setDosagem(prescricaoDetails.getDosagem());
-            updatedPrescricao.setDataPrescricao(prescricaoDetails.getDataPrescricao());
-            return ResponseEntity.ok(prescricaoService.save(updatedPrescricao));
+        Optional<Prescricao> prescricaoOpt = prescricaoService.findById(id);
+        if (prescricaoOpt.isPresent()) {
+            Prescricao prescricao = prescricaoOpt.get();
+            PrescricaoAccess access = new PrescricaoAccess(prescricao);
+            PrescricaoAccess details = new PrescricaoAccess(prescricaoDetails);
+
+            access.setConsulta(details.getConsulta());
+            access.setMedicamento(details.getMedicamento());
+            access.setDosagem(details.getDosagem());
+            access.setDataPrescricao(details.getDataPrescricao());
+
+            return ResponseEntity.ok(prescricaoService.save(prescricao));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrescricao(@PathVariable Long id) {
