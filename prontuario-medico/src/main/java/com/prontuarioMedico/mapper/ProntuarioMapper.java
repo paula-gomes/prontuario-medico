@@ -1,30 +1,26 @@
 package com.prontuarioMedico.mapper;
 
+
 import com.prontuarioMedico.dto.ProntuarioDto;
 import com.prontuarioMedico.entities.Prontuario;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public class ProntuarioMapper {
-    public static Prontuario toEntity(ProntuarioDto dto) {
-        if (dto == null) return null;
-        Prontuario prontuario = new Prontuario();
-        prontuario.setId(dto.getId());
-        prontuario.setDataCriacao(dto.getDataCriacao());
-        return prontuario;
-    }
+import java.util.List;
+
+@Mapper(componentModel = "spring")
+public interface ProntuarioMapper {
+
+    Prontuario toEntity(ProntuarioDto dto);
+
+    ProntuarioDto toDto(Prontuario prontuario);
+
+    List<ProntuarioDto> toDtoList(List<Prontuario> prontuarios);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntityFromDto(ProntuarioDto dto, @MappingTarget Prontuario entity);
 
 
-    public static ProntuarioDto toDto(Prontuario prontuario) {
-        if (prontuario == null) return null;
-        ProntuarioDto dto = new ProntuarioDto();
-        dto.setId(prontuario.getId());
-        dto.setDataCriacao(prontuario.getDataCriacao());
-        return dto;
-    }
-
-
-    public static void updateEntityFromDto(ProntuarioDto dto, Prontuario prontuario) {
-        if (dto.getDataCriacao() != null) {
-            prontuario.setDataCriacao(dto.getDataCriacao());
-        }
-    }
 }

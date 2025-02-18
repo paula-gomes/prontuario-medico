@@ -3,6 +3,7 @@ package com.prontuarioMedico.controllers;
 import com.prontuarioMedico.dto.PacienteDto;
 import com.prontuarioMedico.entities.Paciente;
 import com.prontuarioMedico.mapper.PacienteMapper;
+import com.prontuarioMedico.service.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class PacienteController {
 
     @Autowired
-    private com.prontuarioMedico.service.PacienteService pacienteService;
+    private PacienteService pacienteService;
 
     @GetMapping
     public List<PacienteDto> getAllPacientes() {
@@ -31,26 +32,19 @@ public class PacienteController {
     }
 
     @PostMapping
-    public PacienteDto createPaciente(@RequestBody @Valid PacienteDto pacienteDto) {
-        Paciente paciente = PacienteMapper.toEntity(pacienteDto);
-
-        if (paciente.getProntuario() != null) {
-            paciente.setProntuario(paciente.getProntuario());
-        }
-
-        Paciente savedPaciente = pacienteService.save(paciente);
-        return PacienteMapper.toDto(savedPaciente);
+    public ResponseEntity<PacienteDto> createPaciente(@RequestBody @Valid PacienteDto pacienteDto) {
+        PacienteDto savedPaciente = pacienteService.salvarPaciente(pacienteDto);
+        return ResponseEntity.ok(savedPaciente);
     }
 
-/*    @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PacienteDto> updatePaciente(
             @PathVariable Long id,
             @RequestBody @Valid PacienteDto pacienteDto) {
         return pacienteService.updatePaciente(id, pacienteDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }*/
-
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePaciente(@PathVariable Long id) {

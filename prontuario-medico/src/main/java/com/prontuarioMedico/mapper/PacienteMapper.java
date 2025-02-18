@@ -1,52 +1,25 @@
 package com.prontuarioMedico.mapper;
 
 import com.prontuarioMedico.dto.PacienteDto;
-import com.prontuarioMedico.dto.ProntuarioDto;
 import com.prontuarioMedico.entities.Paciente;
-import com.prontuarioMedico.entities.Prontuario;
+import org.mapstruct.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-public class PacienteMapper {
 
-    public static Paciente toEntity(PacienteDto dto) {
-        if (dto == null) return null;
+@Mapper(componentModel = "spring")
+public interface PacienteMapper {
 
-        Paciente paciente = new Paciente();
-        paciente.setNome(dto.getNome());
-        paciente.setCpf(dto.getCpf());
-        paciente.setDataNascimento(dto.getDataNascimento());
-        paciente.setEndereco(dto.getEndereco());
-        paciente.setTelefone(dto.getTelefone());
+    @Mapping(source = "prontuario.id", target = "prontuario.id")
+    Paciente toEntity(PacienteDto dto);
 
-        if (dto.getProntuario() != null && dto.getProntuario().getId() != null) {
-            Prontuario prontuario = new Prontuario();
-            prontuario.setId(dto.getProntuario().getId());
-            prontuario.setPaciente(paciente);
-            paciente.setProntuario(prontuario);
-        }
+    @Mapping(source = "prontuario.id", target = "prontuario.id")
+    @Mapping(source = "prontuario.dataCriacao", target = "prontuario.dataCriacao")
+    PacienteDto toDto(Paciente paciente);
 
-        return paciente;
-    }
+    List<PacienteDto> toDtoList(List<Paciente> pacientes);
 
-    public static PacienteDto toDto(Paciente paciente) {
-        if (paciente == null) return null;
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntityFromDto(PacienteDto dto, @MappingTarget Paciente entity);
 
-        PacienteDto dto = new PacienteDto();
-        dto.setId(paciente.getId());
-        dto.setNome(paciente.getNome());
-        dto.setCpf(paciente.getCpf());
-        dto.setDataNascimento(paciente.getDataNascimento());
-        dto.setEndereco(paciente.getEndereco());
-        dto.setTelefone(paciente.getTelefone());
-
-        if (paciente.getProntuario() != null) {
-            ProntuarioDto prontuarioDto = new ProntuarioDto();
-            prontuarioDto.setId(paciente.getProntuario().getId());
-            prontuarioDto.setDataCriacao(paciente.getProntuario().getDataCriacao());
-            dto.setProntuario(prontuarioDto);
-        }
-
-        return dto;
-    }
 }

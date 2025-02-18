@@ -18,33 +18,33 @@ public class PacienteService {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+    @Autowired
+    private  PacienteMapper pacienteMapper;
 
     public List<PacienteDto> findAll() {
-        return pacienteRepository.findAll().stream()
-                .map(PacienteMapper::toDto)
-                .collect(Collectors.toList());
+        List<Paciente> pacientes = pacienteRepository.findAll();
+        return pacienteMapper.toDtoList(pacientes);
     }
 
     public Optional<PacienteDto> findById(Long id) {
         return pacienteRepository.findById(id)
-                .map(PacienteMapper::toDto);
+                .map(pacienteMapper::toDto);
+    }
+
+    public PacienteDto salvarPaciente(PacienteDto dto) {
+        Paciente paciente = pacienteMapper.toEntity(dto);
+        paciente = pacienteRepository.save(paciente);
+        return pacienteMapper.toDto(paciente);
     }
 
     @Transactional
-    public Paciente save(Paciente paciente) {
-        if (paciente.getProntuario() != null) {
-            paciente.getProntuario().setPaciente(paciente);
-        }
-        return pacienteRepository.save(paciente);
-    }
-
-/*    public Optional<PacienteDto> updatePaciente(Long id, PacienteDto pacienteDto) {
+    public Optional<PacienteDto> updatePaciente(Long id, PacienteDto pacienteDto) {
         return pacienteRepository.findById(id).map(existingPaciente -> {
-            PacienteMapper.updateEntityFromDto(pacienteDto, existingPaciente);
+            pacienteMapper.updateEntityFromDto(pacienteDto, existingPaciente);
             Paciente updated = pacienteRepository.save(existingPaciente);
-            return PacienteMapper.toDto(updated);
+            return pacienteMapper.toDto(updated);
         });
-    }*/
+    }
 
     public void deleteById(Long id) {
         pacienteRepository.deleteById(id);
