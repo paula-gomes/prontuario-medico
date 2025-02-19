@@ -1,8 +1,6 @@
 package com.prontuarioMedico.controllers;
 
-import com.prontuarioMedico.access.ConsultaAccess;
 import com.prontuarioMedico.dto.ConsultaDto;
-import com.prontuarioMedico.entities.Consulta;
 import com.prontuarioMedico.service.ArmazenamentoService;
 import com.prontuarioMedico.service.ConsultaService;
 import jakarta.validation.Valid;
@@ -11,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/consultas")
