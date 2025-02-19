@@ -1,14 +1,13 @@
 package com.prontuarioMedico.controllers;
 
-import com.prontuarioMedico.access.ExameAccess;
-import com.prontuarioMedico.entities.Exame;
-import com.prontuarioMedico.services.ExameService;
+import com.prontuarioMedico.dto.ExameDto;
+import com.prontuarioMedico.service.ExameService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/exames")
@@ -18,37 +17,31 @@ public class ExameController {
     private ExameService exameService;
 
     @GetMapping
-    public List<Exame> getAllExames() {
+    public List<ExameDto> getAllExames() {
         return exameService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Exame> getExameById(@PathVariable Long id) {
-        Optional<Exame> exame = exameService.findById(id);
-        return exame.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ExameDto> getExameById(@PathVariable Long id) {
+        return exameService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public Exame createExame(@RequestBody Exame exame) {
-        return exameService.save(exame);
+    public ResponseEntity<ExameDto> createExame(@RequestBody @Valid ExameDto exameDto) {
+        ExameDto savedExame = exameService.save(exameDto);
+        return ResponseEntity.ok(savedExame);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Exame> updateExame(@PathVariable Long id, @RequestBody Exame exameDetails) {
-        Optional<Exame> exameOpt = exameService.findById(id);
-        if (exameOpt.isPresent()) {
-            Exame exame = exameOpt.get();
-            ExameAccess access = new ExameAccess(exame);
-            ExameAccess details = new ExameAccess(exameDetails);
-
-            access.setConsulta(details.getConsulta());
-            access.setTipo(details.getTipo());
-            access.setDataExame(details.getDataExame());
-
-            return ResponseEntity.ok(exameService.save(exame));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ExameDto> updateExame(
+            @PathVariable Long id,
+            @RequestBody @Valid ExameDto exameDto) {
+        return exameService.update(id, exameDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

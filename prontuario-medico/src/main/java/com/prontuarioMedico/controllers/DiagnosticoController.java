@@ -1,7 +1,6 @@
 package com.prontuarioMedico.controllers;
 
-import com.prontuarioMedico.access.DiagnosticoAccess;
-import com.prontuarioMedico.entities.Diagnostico;
+import com.prontuarioMedico.dto.DiagnosticoDto;
 
 import com.prontuarioMedico.service.DiagnosticoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/diagnosticos")
@@ -19,36 +17,30 @@ public class DiagnosticoController {
     private DiagnosticoService diagnosticoService;
 
     @GetMapping
-    public List<Diagnostico> getAllDiagnosticos() {
+    public List<DiagnosticoDto> getAllDiagnosticos() {
         return diagnosticoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Diagnostico> getDiagnosticoById(@PathVariable Long id) {
-        Optional<Diagnostico> diagnostico = diagnosticoService.findById(id);
-        return diagnostico.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<DiagnosticoDto> getDiagnosticoById(@PathVariable Long id) {
+      return diagnosticoService.findById(id)
+              .map(ResponseEntity::ok)
+              .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Diagnostico createDiagnostico(@RequestBody Diagnostico diagnostico) {
-        return diagnosticoService.save(diagnostico);
+    public ResponseEntity<DiagnosticoDto> createDiagnostico(@RequestBody DiagnosticoDto diagnosticodto) {
+        DiagnosticoDto savedDiagnostico = diagnosticoService.save(diagnosticodto);
+        return ResponseEntity.ok(savedDiagnostico);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Diagnostico> updateDiagnostico(@PathVariable Long id, @RequestBody Diagnostico diagnosticoDetails) {
-        Optional<Diagnostico> diagnosticoOpt = diagnosticoService.findById(id);
-        if (diagnosticoOpt.isPresent()) {
-            Diagnostico diagnostico = diagnosticoOpt.get();
-            DiagnosticoAccess access = new DiagnosticoAccess(diagnostico);
-            DiagnosticoAccess details = new DiagnosticoAccess(diagnosticoDetails);
-
-            access.setConsulta(details.getConsulta());
-            access.setDescricao(details.getDescricao());
-
-            return ResponseEntity.ok(diagnosticoService.save(diagnostico));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<DiagnosticoDto> updateDiagnostico(
+            @PathVariable Long id,
+            @RequestBody DiagnosticoDto diagnosticoDto) {
+        return diagnosticoService.update(id, diagnosticoDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
