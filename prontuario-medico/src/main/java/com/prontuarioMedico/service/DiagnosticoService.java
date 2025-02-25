@@ -17,6 +17,7 @@ public class DiagnosticoService {
     @Autowired
     private DiagnosticoRepository diagnosticoRepository;
 
+    @Autowired
     private DiagnosticoMapper diagnosticoMapper;
 
     public List<DiagnosticoDto> findAll() {

@@ -1,11 +1,13 @@
 package com.prontuarioMedico.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "consultas")
 public class Consulta {
@@ -13,30 +15,25 @@ public class Consulta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    public String paciente;
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
 
     @Column(nullable = false)
     public LocalDateTime dataConsulta;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "consulta_diagnostico",
-            joinColumns = @JoinColumn(name = "consulta_id"),
-            inverseJoinColumns = @JoinColumn(name = "diagnostico_id")
-    )
-    public List<Diagnostico> diagnosticos;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "consulta_prescricao",
-            joinColumns = @JoinColumn(name = "consulta_id"),
-            inverseJoinColumns = @JoinColumn(name = "prescricao_id")
-    )
-    public List<Prescricao> prescricoes;
-
+    @JsonManagedReference(value = "consulta-diagnosticos")
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
-    public List<Exame> exames;
+    private List<Diagnostico> diagnosticos;
 
-    public String imageUrl;
+    @JsonManagedReference(value = "prescricao-consulta")
+    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    private List<Prescricao> prescricoes;
+
+    @JsonManagedReference(value = "exame-consulta")
+    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
+    private List<Exame> exames;
+
+    private String imageUrl;
+
 }

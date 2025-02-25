@@ -32,9 +32,24 @@ public class ConsultaService {
     @Transactional
     public ConsultaDto save(ConsultaDto dto) {
         Consulta consulta = consultaMapper.toEntity(dto);
-        consulta = consultaRepository.save(consulta);
-        return consultaMapper.toDto(consulta);
+
+        if (consulta.getDiagnosticos() != null) {
+            consulta.getDiagnosticos().forEach(d -> d.setConsulta(consulta));
+        }
+
+        if (consulta.getExames() != null) {
+            consulta.getExames().forEach(e -> e.setConsulta(consulta));
+        }
+
+        if (consulta.getPrescricoes() != null) {
+            consulta.getPrescricoes().forEach(p -> p.setConsulta(consulta));
+        }
+
+        Consulta savedConsulta = consultaRepository.save(consulta);
+        return consultaMapper.toDto(savedConsulta);
     }
+
+
     @Transactional
     public Optional<ConsultaDto> update(Long id, ConsultaDto dto) {
         return consultaRepository.findById(id).map(existingConsulta -> {

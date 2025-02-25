@@ -1,10 +1,14 @@
 package com.prontuarioMedico.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prontuarios")
+@Data
 public class Prontuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,29 +19,7 @@ public class Prontuario {
 
     @OneToOne
     @JoinColumn(name = "paciente_id", nullable = false, unique = true)
+    @JsonBackReference(value = "prontuario-paciente")
     private Paciente paciente;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
 }

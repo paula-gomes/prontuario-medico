@@ -1,46 +1,24 @@
 package com.prontuarioMedico.dto;
 
-import com.prontuarioMedico.entities.Diagnostico;
-import com.prontuarioMedico.entities.Exame;
-import com.prontuarioMedico.entities.Prescricao;
-import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 public class ConsultaDto {
-    @Column(nullable = false)
-    public String paciente;
+    private PacienteDto paciente;
+    private LocalDateTime dataConsulta;
+    private List<DiagnosticoDto> diagnosticos;
+    private List<PrescricaoDto> prescricoes;
+    private List<ExameDto> exames;
+    private String imageUrl;
 
-    @Column(nullable = false)
-    public LocalDateTime dataConsulta;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "consulta_diagnostico",
-            joinColumns = @JoinColumn(name = "consulta_id"),
-            inverseJoinColumns = @JoinColumn(name = "diagnostico_id")
-    )
-    public List<Diagnostico> diagnosticos;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "consulta_prescricao",
-            joinColumns = @JoinColumn(name = "consulta_id"),
-            inverseJoinColumns = @JoinColumn(name = "prescricao_id")
-    )
-    public List<Prescricao> prescricoes;
-
-    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
-    public List<Exame> exames;
-
-    public String imageUrl;
-
-    public String getPaciente() {
+    public PacienteDto getPaciente() {
         return paciente;
     }
 
-    public void setPaciente(String paciente) {
+    public void setPaciente(PacienteDto paciente) {
         this.paciente = paciente;
     }
 
@@ -52,27 +30,27 @@ public class ConsultaDto {
         this.dataConsulta = dataConsulta;
     }
 
-    public List<Diagnostico> getDiagnosticos() {
+    public List<DiagnosticoDto> getDiagnosticos() {
         return diagnosticos;
     }
 
-    public void setDiagnosticos(List<Diagnostico> diagnosticos) {
+    public void setDiagnosticos(List<DiagnosticoDto> diagnosticos) {
         this.diagnosticos = diagnosticos;
     }
 
-    public List<Prescricao> getPrescricoes() {
+    public List<PrescricaoDto> getPrescricoes() {
         return prescricoes;
     }
 
-    public void setPrescricoes(List<Prescricao> prescricoes) {
+    public void setPrescricoes(List<PrescricaoDto> prescricoes) {
         this.prescricoes = prescricoes;
     }
 
-    public List<Exame> getExames() {
+    public List<ExameDto> getExames() {
         return exames;
     }
 
-    public void setExames(List<Exame> exames) {
+    public void setExames(List<ExameDto> exames) {
         this.exames = exames;
     }
 

@@ -9,22 +9,12 @@ import java.time.LocalDateTime;
 
 public class DiagnosticoDto {
 
-    @ManyToOne
-    @JoinColumn(name = "consulta_id", nullable = false)
-    public Consulta consulta;
 
     @Column(nullable = false)
     public String descricao;
 
     private LocalDateTime dataDiagnostico = LocalDateTime.now();
 
-    public Consulta getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }
 
     public String getDescricao() {
         return descricao;
