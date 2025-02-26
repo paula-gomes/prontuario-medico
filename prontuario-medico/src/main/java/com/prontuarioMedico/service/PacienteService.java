@@ -49,4 +49,10 @@ public class PacienteService {
     public void deleteById(Long id) {
         pacienteRepository.deleteById(id);
     }
+
+
+    public Optional<PacienteDto> findByCpf(String cpf) {
+        return pacienteRepository.findByCpf(cpf)
+                .map(pacienteMapper::toDto);
+    }
 }

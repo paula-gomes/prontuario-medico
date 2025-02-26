@@ -1,14 +1,21 @@
 package com.prontuarioMedico.controllers;
 
 import com.prontuarioMedico.dto.ConsultaDto;
+import com.prontuarioMedico.dto.PacienteDto;
 import com.prontuarioMedico.service.ArmazenamentoService;
 import com.prontuarioMedico.service.ConsultaService;
+import com.prontuarioMedico.service.GerarConsultaPdfService;
+import com.prontuarioMedico.service.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/consultas")
@@ -19,6 +26,11 @@ public class ConsultaController {
 
     @Autowired
     private ArmazenamentoService armazenamentoService;
+
+    @Autowired
+    private PacienteService pacienteService;
+    @Autowired
+    private GerarConsultaPdfService gerarConsultaPdfService;
 
 
     @GetMapping
@@ -56,6 +68,27 @@ public class ConsultaController {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> getConsultaPdf(@RequestParam String cpf) {
+        Optional<PacienteDto> pacienteDtoOptional = pacienteService.findByCpf(cpf);
+        if (pacienteDtoOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        PacienteDto pacienteDto = pacienteDtoOptional.get();
+        ConsultaDto consultaDto = new ConsultaDto();
+        consultaDto.setPaciente(pacienteDto);
+
+        try {
+            byte[] pdfBytes = gerarConsultaPdfService.generatePdf(consultaDto);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "anexo; filename=consulta.pdf");
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
