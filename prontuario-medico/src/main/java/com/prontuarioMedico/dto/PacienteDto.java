@@ -3,20 +3,30 @@ package com.prontuarioMedico.dto;
 import java.time.LocalDate;
 
 public class PacienteDto {
-
     private Long id;
-
     private String nome;
-
     private String cpf;
-
     private LocalDate dataNascimento;
-
     private String endereco;
-
     private String telefone;
+    private Long prontuarioId; // Apenas o ID do prontuário
 
-    private ProntuarioDto prontuario;
+    public PacienteDto() {
+    }
+
+    public PacienteDto(Long id, String nome, String cpf, LocalDate dataNascimento, String endereco, String telefone, Long prontuarioId) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.prontuarioId = prontuarioId;
+    }
+
+    public PacienteDto(Long id, String nome, String cpf) {
+    }
+
 
     public Long getId() {
         return id;
@@ -66,11 +76,11 @@ public class PacienteDto {
         this.telefone = telefone;
     }
 
-    public ProntuarioDto getProntuario() {
-        return prontuario;
+    public Long getProntuarioId() {
+        return prontuarioId;
     }
 
-    public void setProntuario(ProntuarioDto prontuario) {
-        this.prontuario = prontuario;
+    public void setProntuarioId(Long prontuarioId) {
+        this.prontuarioId = prontuarioId;
     }
 }

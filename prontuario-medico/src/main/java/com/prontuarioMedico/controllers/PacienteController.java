@@ -1,8 +1,6 @@
 package com.prontuarioMedico.controllers;
 
 import com.prontuarioMedico.dto.PacienteDto;
-import com.prontuarioMedico.entities.Paciente;
-import com.prontuarioMedico.mapper.PacienteMapper;
 import com.prontuarioMedico.service.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/pacientes")

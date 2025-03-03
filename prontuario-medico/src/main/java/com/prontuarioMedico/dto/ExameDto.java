@@ -1,29 +1,52 @@
 package com.prontuarioMedico.dto;
 
-import com.prontuarioMedico.entities.Consulta;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 import java.time.LocalDateTime;
 
-
 public class ExameDto {
-    @ManyToOne
-    @JoinColumn(name = "consulta_id", nullable = false)
-    public Consulta consulta;
+    private Long id;
+    private Long consultaId;
+    private String tipo;
+    private LocalDateTime dataExame;
+    private String nome;
+    private String resultado;
 
-    @Column(nullable = false)
-    public String tipo;
-
-    public LocalDateTime dataExame = LocalDateTime.now();
-
-    public Consulta getConsulta() {
-        return consulta;
+    public ExameDto() {
+        this.dataExame = LocalDateTime.now();
     }
 
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
+    public ExameDto(Long id, String nome, String resultado) {
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getResultado() {
+        return resultado;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getConsultaId() {
+        return consultaId;
+    }
+
+    public void setConsultaId(Long consultaId) {
+        this.consultaId = consultaId;
     }
 
     public String getTipo() {

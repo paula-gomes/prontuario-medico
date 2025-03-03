@@ -20,7 +20,6 @@ public class ConsultaController {
     @Autowired
     private ArmazenamentoService armazenamentoService;
 
-
     @GetMapping
     public List<ConsultaDto> getAllConsultas() {
         return consultaService.findAll();
@@ -35,19 +34,18 @@ public class ConsultaController {
 
     @PostMapping
     public ResponseEntity<ConsultaDto> createConsulta(@RequestBody @Valid ConsultaDto consultaDto) {
+        System.out.println("Recebendo consulta: " + consultaDto.getDataConsulta());
         ConsultaDto savedConsulta = consultaService.save(consultaDto);
         return ResponseEntity.ok(savedConsulta);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ConsultaDto> updateConsulta(
-            @PathVariable Long id,
-            @RequestBody @Valid ConsultaDto consultaDto) {
+    public ResponseEntity<ConsultaDto> updateConsulta(@PathVariable Long id,
+                                                      @RequestBody @Valid ConsultaDto consultaDto) {
         return consultaService.update(id, consultaDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteConsulta(@PathVariable Long id) {

@@ -1,20 +1,37 @@
 package com.prontuarioMedico.dto;
 
-import com.prontuarioMedico.entities.Consulta;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 import java.time.LocalDateTime;
 
 public class DiagnosticoDto {
+    private Long id;
+    private String descricao;
+    private LocalDateTime dataDiagnostico;
 
+    public DiagnosticoDto() {
+        this.dataDiagnostico = LocalDateTime.now();
+    }
 
-    @Column(nullable = false)
-    public String descricao;
+    public DiagnosticoDto(Long id, String descricao, LocalDateTime dataDiagnostico) {
+        this.id = id;
+        this.descricao = descricao;
+        this.dataDiagnostico = dataDiagnostico;
+    }
 
-    private LocalDateTime dataDiagnostico = LocalDateTime.now();
+    public DiagnosticoDto(Long id, String descricao, Long aLong) {
+    }
 
+    public DiagnosticoDto(Long id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getDescricao() {
         return descricao;

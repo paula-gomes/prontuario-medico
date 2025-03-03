@@ -2,8 +2,6 @@ package com.prontuarioMedico.service;
 
 import com.prontuarioMedico.dto.PacienteDto;
 import com.prontuarioMedico.entities.Paciente;
-import com.prontuarioMedico.entities.Prontuario;
-import com.prontuarioMedico.mapper.PacienteMapper;
 import com.prontuarioMedico.repositories.PacienteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,35 +16,65 @@ public class PacienteService {
 
     @Autowired
     private PacienteRepository pacienteRepository;
-    @Autowired
-    private  PacienteMapper pacienteMapper;
 
     public List<PacienteDto> findAll() {
         List<Paciente> pacientes = pacienteRepository.findAll();
-        return pacienteMapper.toDtoList(pacientes);
+        return pacientes.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     public Optional<PacienteDto> findById(Long id) {
-        return pacienteRepository.findById(id)
-                .map(pacienteMapper::toDto);
+        return pacienteRepository.findById(id).map(this::toDto);
     }
 
     public PacienteDto salvarPaciente(PacienteDto dto) {
-        Paciente paciente = pacienteMapper.toEntity(dto);
+        Paciente paciente = toEntity(dto);
         paciente = pacienteRepository.save(paciente);
-        return pacienteMapper.toDto(paciente);
+        return toDto(paciente);
     }
 
     @Transactional
-    public Optional<PacienteDto> updatePaciente(Long id, PacienteDto pacienteDto) {
+    public Optional<PacienteDto> updatePaciente(Long id, PacienteDto dto) {
         return pacienteRepository.findById(id).map(existingPaciente -> {
-            pacienteMapper.updateEntityFromDto(pacienteDto, existingPaciente);
+            updateEntityFromDto(dto, existingPaciente);
             Paciente updated = pacienteRepository.save(existingPaciente);
-            return pacienteMapper.toDto(updated);
+            return toDto(updated);
         });
     }
 
     public void deleteById(Long id) {
         pacienteRepository.deleteById(id);
+    }
+
+
+    public PacienteDto toDto(Paciente paciente) {
+        return new PacienteDto(
+                paciente.getId(),
+                paciente.getNome(),
+                paciente.getCpf(),
+                paciente.getDataNascimento(),
+                paciente.getEndereco(),
+                paciente.getTelefone(),
+                paciente.getProntuario() != null ? paciente.getProntuario().getId() : null
+        );
+    }
+
+
+    public Paciente toEntity(PacienteDto dto) {
+        Paciente paciente = new Paciente();
+        paciente.setId(dto.getId());
+        paciente.setNome(dto.getNome());
+        paciente.setCpf(dto.getCpf());
+        paciente.setDataNascimento(dto.getDataNascimento());
+        paciente.setEndereco(dto.getEndereco());
+        paciente.setTelefone(dto.getTelefone());
+
+        return paciente;
+    }
+
+
+    private void updateEntityFromDto(PacienteDto dto, Paciente paciente) {
+        paciente.setNome(dto.getNome());
+        paciente.setCpf(dto.getCpf());
+        paciente.setDataNascimento(dto.getDataNascimento());
     }
 }

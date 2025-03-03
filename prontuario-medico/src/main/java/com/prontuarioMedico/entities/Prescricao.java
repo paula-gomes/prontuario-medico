@@ -2,13 +2,13 @@ package com.prontuarioMedico.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "prescricoes")
 public class Prescricao {
@@ -22,8 +22,56 @@ public class Prescricao {
     private Consulta consulta;
 
     @Column(nullable = false)
-    public String medicamento;
+    private String medicamento;
 
-    public String dosagem;
-    public LocalDateTime dataPrescricao = LocalDateTime.now();
+    private String dosagem;
+
+    private LocalDateTime dataPrescricao;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Consulta getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
+
+    public String getMedicamento() {
+        return medicamento;
+    }
+
+    public void setMedicamento(String medicamento) {
+        this.medicamento = medicamento;
+    }
+
+    public String getDosagem() {
+        return dosagem;
+    }
+
+    public void setDosagem(String dosagem) {
+        this.dosagem = dosagem;
+    }
+
+    public LocalDateTime getDataPrescricao() {
+        return dataPrescricao;
+    }
+
+    public void setDataPrescricao(LocalDateTime dataPrescricao) {
+        this.dataPrescricao = dataPrescricao;
+    }
+
+    @PrePersist
+    protected void prePersist() {
+        if (dataPrescricao == null) {
+            dataPrescricao = LocalDateTime.now();
+        }
+    }
 }

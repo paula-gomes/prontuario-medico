@@ -1,12 +1,9 @@
 package com.prontuarioMedico.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
-
 public class ConsultaDto {
+    private Long id;
     private PacienteDto paciente;
     private LocalDateTime dataConsulta;
     private List<DiagnosticoDto> diagnosticos;
@@ -14,44 +11,17 @@ public class ConsultaDto {
     private List<ExameDto> exames;
     private String imageUrl;
 
-    public PacienteDto getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(PacienteDto paciente) {
+    public ConsultaDto(Long id, PacienteDto paciente, LocalDateTime dataConsulta, List<DiagnosticoDto> diagnosticos, List<PrescricaoDto> prescricoes, List<ExameDto> exames, Object o) {
+        this.id = id;
         this.paciente = paciente;
-    }
-
-    public LocalDateTime getDataConsulta() {
-        return dataConsulta;
-    }
-
-    public void setDataConsulta(LocalDateTime dataConsulta) {
         this.dataConsulta = dataConsulta;
-    }
-
-    public List<DiagnosticoDto> getDiagnosticos() {
-        return diagnosticos;
-    }
-
-    public void setDiagnosticos(List<DiagnosticoDto> diagnosticos) {
         this.diagnosticos = diagnosticos;
-    }
-
-    public List<PrescricaoDto> getPrescricoes() {
-        return prescricoes;
-    }
-
-    public void setPrescricoes(List<PrescricaoDto> prescricoes) {
         this.prescricoes = prescricoes;
-    }
-
-    public List<ExameDto> getExames() {
-        return exames;
-    }
-
-    public void setExames(List<ExameDto> exames) {
         this.exames = exames;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getImageUrl() {
@@ -60,5 +30,25 @@ public class ConsultaDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public PacienteDto getPaciente() {
+        return paciente;
+    }
+
+    public LocalDateTime getDataConsulta() {
+        return dataConsulta;
+    }
+
+    public List<DiagnosticoDto> getDiagnosticos() {
+        return diagnosticos;
+    }
+
+    public List<PrescricaoDto> getPrescricoes() {
+        return prescricoes;
+    }
+
+    public List<ExameDto> getExames() {
+        return exames;
     }
 }
