@@ -1,13 +1,13 @@
 package com.prontuarioMedico.controllers;
 
-import com.prontuarioMedico.entities.Prescricao;
-import com.prontuarioMedico.services.PrescricaoService;
+import com.prontuarioMedico.dto.PrescricaoDto;
+import com.prontuarioMedico.service.PrescricaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/prescricoes")
@@ -17,34 +17,30 @@ public class PrescricaoController {
     private PrescricaoService prescricaoService;
 
     @GetMapping
-    public List<Prescricao> getAllPrescricoes() {
+    public List<PrescricaoDto> getAllPrescricoes() {
         return prescricaoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Prescricao> getPrescricaoById(@PathVariable Long id) {
-        Optional<Prescricao> prescricao = prescricaoService.findById(id);
-        return prescricao.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PrescricaoDto> getPrescricaoById(@PathVariable Long id) {
+        return prescricaoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Prescricao createPrescricao(@RequestBody Prescricao prescricao) {
-        return prescricaoService.save(prescricao);
+    public ResponseEntity<PrescricaoDto> createPrescricao(@RequestBody @Valid PrescricaoDto prescricaoDto) {
+        PrescricaoDto savedPrescricao = prescricaoService.save(prescricaoDto);
+        return ResponseEntity.ok(savedPrescricao);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Prescricao> updatePrescricao(@PathVariable Long id, @RequestBody Prescricao prescricaoDetails) {
-        Optional<Prescricao> prescricao = prescricaoService.findById(id);
-        if (prescricao.isPresent()) {
-            Prescricao updatedPrescricao = prescricao.get();
-            updatedPrescricao.setConsulta(prescricaoDetails.getConsulta());
-            updatedPrescricao.setMedicamento(prescricaoDetails.getMedicamento());
-            updatedPrescricao.setDosagem(prescricaoDetails.getDosagem());
-            updatedPrescricao.setDataPrescricao(prescricaoDetails.getDataPrescricao());
-            return ResponseEntity.ok(prescricaoService.save(updatedPrescricao));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PrescricaoDto> updatePrescricao(
+            @PathVariable Long id,
+            @RequestBody @Valid PrescricaoDto prescricaoDto) {
+        return prescricaoService.update(id, prescricaoDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
