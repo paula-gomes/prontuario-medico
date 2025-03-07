@@ -17,6 +17,9 @@ public class ExameDto {
     public ExameDto(Long id, String nome, String resultado) {
     }
 
+    public ExameDto(Long id, Long aLong, String s, String nome, String resultado) {
+    }
+
     public String getNome() {
         return nome;
     }

@@ -25,7 +25,7 @@ public class Consulta {
     private Paciente paciente;
 
     @Column(nullable = false)
-    private LocalDateTime dataHora;  // 🔹 Corrigido para manter um único campo de data.
+    private LocalDateTime dataHora;
 
     @JsonManagedReference(value = "consulta-diagnosticos")
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -35,7 +35,7 @@ public class Consulta {
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prescricao> prescricoes;
 
-    @JsonManagedReference(value = "exame-consulta")
+    @JsonManagedReference
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exame> exames;
 

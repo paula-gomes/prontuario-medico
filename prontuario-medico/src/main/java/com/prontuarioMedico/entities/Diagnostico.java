@@ -18,7 +18,7 @@ public class Diagnostico {
 
     @JsonBackReference(value = "consulta-diagnosticos")
     @ManyToOne
-    @JoinColumn(name = "consulta_id", nullable = false)
+    @JoinColumn(name = "consulta_id", nullable = true)
     private Consulta consulta;
 
     @Column(nullable = false)

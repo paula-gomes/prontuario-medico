@@ -1,10 +1,13 @@
 package com.prontuarioMedico.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public class DiagnosticoDto {
     private Long id;
     private String descricao;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataDiagnostico;
 
     public DiagnosticoDto() {
